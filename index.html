@@ -107,7 +107,7 @@ body.focused .mlabel{pointer-events:none}body.focused #intro,body.focused .mlabe
 @media (max-width:640px){.logo{width:46px;height:43px;margin-top:-8px}}
 
 .px{position:absolute;top:10px;right:10px;width:44px;height:44px;font:inherit;font-size:18px;color:#fff;background:none;border:1px solid rgba(255,255,255,.3);cursor:pointer}.px:hover{background:#fff;color:#000}
-#menuBtn,#mnav,#mprev,#mnext{display:none}
+#menuBtn,#mnav,#mprev,#mnext,#recenter{display:none}#hint .hm{display:none}@media (max-width:640px){#hint .hm{display:inline}#hint .hd{display:none}}#recenter svg{display:block;margin:auto}
 #apscrub{position:absolute;left:40px;right:40px;bottom:96px;height:26px;z-index:3;cursor:pointer;touch-action:none;background:linear-gradient(rgba(255,255,255,.25),rgba(255,255,255,.25)) center/100% 1px no-repeat}
 #apticks{height:100%;width:100%;transform-origin:0 50%;transform:scaleX(0);will-change:transform;background:repeating-linear-gradient(90deg,#ff3b3b 0 2px,transparent 2px 5px)}
 #aptip{position:absolute;bottom:28px;transform:translateX(-50%);padding:2px 6px;background:rgba(5,8,14,.85);border:1px solid rgba(255,255,255,.4);font-size:16px;opacity:0;pointer-events:none}#apscrub:hover #aptip{opacity:1}
@@ -119,6 +119,7 @@ body.m-studio #hint,body.m-studio #intro{display:none}
  #hud .top .grp:last-child{display:none}#nav-map{display:none}
  #hud .top .grp:first-child{order:2;gap:10px}#rec{font-size:15px!important}#tc{font-size:15px!important}
  .logo{order:1;width:74px!important;height:69px!important;margin-top:-6px!important}
+ body:not(.m-studio):not(.menu) #recenter{display:block}#recenter{position:fixed;z-index:7;right:calc(14px + env(safe-area-inset-right));bottom:calc(150px + env(safe-area-inset-bottom));width:52px;height:52px;font:28px/1 'VT323',monospace;color:#fff;background:rgba(5,8,14,.85);border:1px solid rgba(255,255,255,.5);box-shadow:2px 0 #ff3b3b,-2px 0 #3bd5ff;cursor:pointer;touch-action:manipulation}
  #menuBtn{display:block;position:fixed;z-index:8;top:calc(14px + env(safe-area-inset-top));right:14px;width:48px;height:48px;font-size:22px;color:#fff;background:rgba(5,8,14,.85);border:1px solid rgba(255,255,255,.5);cursor:pointer}
  #hud .top{right:76px!important}
  #mnav{display:flex;flex-direction:column;position:fixed;z-index:8;top:calc(70px + env(safe-area-inset-top));right:14px;min-width:190px;background:#0b0d12;border:1px solid rgba(255,255,255,.35);opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .2s,transform .2s}
@@ -176,6 +177,24 @@ body.m-studio #hint,body.m-studio #intro{display:none}
  #aplayer.proj #apscrub{bottom:calc(206px + env(safe-area-inset-bottom))}#aplayer.proj .apv{height:calc(100dvh - 262px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
  #aplayer.proj.land .apv{top:calc(10px + env(safe-area-inset-top) + (100dvh - 262px - env(safe-area-inset-top) - env(safe-area-inset-bottom))/2 - 28.125vw)}
 }
+
+/* ---- player control bar (phones): one aligned VHS transport ---- */
+@media (max-width:640px){
+ #aplayer .apbar{display:grid!important;grid-template-columns:repeat(6,1fr);gap:0;row-gap:8px;align-items:stretch;justify-content:stretch;padding:8px calc(12px + env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left))}
+ #apinfo{grid-column:1/-1;order:0;margin:0 0 2px!important;text-align:center}
+ #aplayer .apnav{grid-column:1/-1;order:1;display:grid!important;grid-template-columns:1fr 1fr 1fr;align-items:stretch!important;gap:0;border:1px solid rgba(255,255,255,.55)}
+ #aplayer.one .apnav{display:none!important}
+ #aplayer .apbar button,#aplayer #apwatch{order:2;grid-column:span 2;min-height:52px;min-width:0;margin:0;padding:0 6px;font-size:13px;letter-spacing:2px;text-transform:uppercase;border:1px solid rgba(255,255,255,.55);border-radius:0;background:rgba(5,8,14,.9);color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:background .12s,color .12s}
+ #aplayer:not(.proj) #apback,#aplayer:not(.proj) #apfs{grid-column:span 3}
+ #apback{order:2}#apfs{order:3;font-size:20px!important;letter-spacing:0!important;border-left:0!important}#aplayer #apwatch{order:4;border-left:0}
+ #aplayer .apnav>*{order:0!important;grid-column:auto!important;border:0!important}#aplayer:not(.proj) #apwatch{display:none!important}#aplayer .apnav #apn,#aplayer .apnav #apnext{border-left:1px solid rgba(255,255,255,.55)!important}
+ #apn{display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.55);color:#ff3b3b;font-size:20px;letter-spacing:2px;text-shadow:0 0 6px rgba(255,59,59,.6)}
+ #aplayer .apbar button:hover{background:rgba(5,8,14,.9);color:#fff}
+ #aplayer .apbar button:active,#aplayer #apwatch:active{background:#fff;color:#000}
+ #aplayer.land #aprot{bottom:calc(100% + 52px);font-size:15px;letter-spacing:3px}
+ #apscrub,#aplayer.proj #apscrub{bottom:calc(166px + env(safe-area-inset-bottom))!important}
+ #aplayer.one #apscrub{bottom:calc(104px + env(safe-area-inset-bottom))!important}
+}
 @media (min-width:641px){.panel p{text-transform:none;letter-spacing:.3px;font-size:13px;line-height:1.8}}
 </style>
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
@@ -189,14 +208,14 @@ body.m-studio #hint,body.m-studio #intro{display:none}
   <div class="grp"><a href="#" id="nav-studio">Studio</a><a href="#" id="nav-archive">Archive</a><a href="#" data-p="about">About</a><a href="#" data-p="contact">Contact</a></div>
  </div>
  <div id="intro"><h1>Cuts that move.</h1><p>Video editor · Sound design · Cinematography.<br><span class="l2">Every light on the map is a tape. Pick one.</span></p></div>
- <div id="hint">Drag to look around<br>Tap a light to load the tape<span class="d"> · ← → ↵ in studio</span></div>
+ <div id="hint"><span class="hd">Drag to look around</span><span class="hm">Drag · pinch · 2-finger move</span><br>Tap a light to load the tape<span class="d"> · ← → ↵ in studio</span></div>
  <div id="bar"><div id="ticks" style="width:0"></div><div class="rest"></div></div>
  <div class="row bot">
   <div class="grp"><span id="clock" class="dt">--:--</span><button id="bw">B&amp;W [OFF]</button></div>
   <div class="grp"><span id="src" class="dt">Source: Map</span><button id="snd">Sound [OFF]</button></div>
  </div>
 </div>
-<button id="back">← Back</button><a id="watch" target="_blank" rel="noopener" href="#">▶ Watch on Instagram</a><button id="menuBtn" aria-label="Menu">☰</button><div id="mnav"><button data-go="nav-map">Map</button><button data-go="nav-studio">Studio</button><button data-go="nav-archive">Archive</button><button data-go="about">About</button><button data-go="contact">Contact</button><button data-go="snd" id="msnd">Sound [OFF]</button></div><button id="mprev" aria-label="Previous monitor">◀</button><button id="mnext" aria-label="Next monitor">▶</button><div id="label"></div><div id="mlabels"></div>
+<button id="back">← Back</button><a id="watch" target="_blank" rel="noopener" href="#">▶ Watch on Instagram</a><button id="recenter" aria-label="Recenter map" title="Recenter"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/></svg></button><button id="menuBtn" aria-label="Menu">☰</button><div id="mnav"><button data-go="nav-map">Map</button><button data-go="nav-studio">Studio</button><button data-go="nav-archive">Archive</button><button data-go="about">About</button><button data-go="contact">Contact</button><button data-go="snd" id="msnd">Sound [OFF]</button></div><button id="mprev" aria-label="Previous monitor">◀</button><button id="mnext" aria-label="Next monitor">▶</button><div id="label"></div><div id="mlabels"></div>
 <div id="archive"><div class="awrap"><div class="ahead"><span class="vt">▶ ARCHIVE · <span id="acount"></span> TAPES</span><button id="aclose">← Back</button></div><div id="agrid"></div></div></div>
 <div id="aplayer"><div class="apbg"></div><video class="apv" playsinline></video><div class="dfx"></div><div id="apscrub"><div id="apticks"></div><div id="aptip" class="vt"></div></div><div class="apbar"><button id="apback">← Back</button><button id="apfs" aria-label="Full screen" title="Full screen">⛶</button><span id="aprot" class="vt">⟲ Rotate for full screen</span><span id="apinfo" class="vt"></span><a id="apwatch" target="_blank" rel="noopener" href="#">▶ Instagram</a><span class="apnav"><button id="apprev">◀ Prev</button><span id="apn" class="vt"></span><button id="apnext">Next ▶</button></span></div></div>
 <div class="panel" id="p-about"><div data-k="About"><button class="px" aria-label="Close">✕</button><h2>About</h2><p>I'm Jedi, a video editor, sound designer and cinematographer based in the Philly/NJ area. I shoot and cut event recaps, festival coverage, artist content, weddings and fashion. Co-founder of ModaChron.</p><p>I've worked events featuring Rotimi, Teni, King Promise, Odumodublvk, Afriskii, AfroPlus and Shut Up &amp; Dance.</p><p>Bookings via <a href="https://www.instagram.com/jedit.jed/" target="_blank" rel="noopener">Instagram DM</a> or <a href="mailto:jedidiahkudaisi@gmail.com">email</a>.</p></div></div>
@@ -308,7 +327,7 @@ LOCS.forEach(L=>{const [x,z]=L.pos,y=Math.max(hgt(x,z),.42);const col=new THREE.
  else{const cas=new THREE.Mesh(new THREE.BoxGeometry(.38,.06,.22),std(0x111318,.5));cas.position.y=.05;g.add(cas);}
  const lt=new THREE.PointLight(col,4,3.5,1.5);lt.position.y=.6;g.add(lt);
  const hit=new THREE.Mesh(new THREE.SphereGeometry(.9,10,10),new THREE.MeshBasicMaterial({visible:false}));hit.position.y=.4;g.add(hit);
- const el=document.createElement('div');el.className='mlabel';el.dataset.k=markers.length;el.textContent=L.name;el.onpointerenter=()=>{hovered=markers[+el.dataset.k];};el.onpointerdown=e=>{drag={x:e.clientX,y:e.clientY,moved:0};};mlabels.appendChild(el);
+ const el=document.createElement('div');el.className='mlabel';el.dataset.k=markers.length;el.textContent=L.name;el.onpointerenter=()=>{hovered=markers[+el.dataset.k];};el.onpointerdown=e=>{drag={x:e.clientX,y:e.clientY,moved:0,t:performance.now(),touch:e.pointerType==='touch'};};mlabels.appendChild(el);
  markers.push({L,g,sp,beam,lt,hit,el,hover:0});});
 const MAPCAM={yaw:.3,dist:innerWidth<=640&&innerHeight>innerWidth?19:15,pitch:.78,target:new THREE.Vector3(0,0,0)};
 
@@ -426,13 +445,36 @@ function unfocus(quiet){if(focused?.video){focused.video.muted=true;swapSrc(focu
 function openLoc(L){click(1200);if(L.kind==='archive')openArchive();else if(L.kind==='studio')goStudio();else if(L.kind==='project')goStudio(L.i);else openPanel(L.kind);}
 function openPanel(k){click(900);label.style.opacity=0;hovered=null;document.body.classList.remove('menu');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));glitchT=Math.max(glitchT,.5);document.getElementById('p-'+k).classList.add('on');}
 addEventListener('pointermove',e=>{mouse.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);par.copy(mouse);
- if(drag){MAPCAM.yaw-=(e.clientX-drag.x)*.005;MAPCAM.pitch=THREE.MathUtils.clamp(MAPCAM.pitch+(e.clientY-drag.y)*.003,.35,1.25);drag.moved+=Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y);drag.x=e.clientX;drag.y=e.clientY;}
+ if(drag&&!TN.pinch){const k=drag.touch?.5:1;MAPCAM.yaw-=(e.clientX-drag.x)*.005*k;MAPCAM.pitch=THREE.MathUtils.clamp(MAPCAM.pitch+(e.clientY-drag.y)*.003*k,.35,1.25);drag.moved+=Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y);drag.x=e.clientX;drag.y=e.clientY;}
  label.style.left=e.clientX+'px';label.style.top=e.clientY+'px';});
-renderer.domElement.addEventListener('pointerdown',e=>{mouse.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);if(mode==='map')drag={x:e.clientX,y:e.clientY,moved:0};});
+renderer.domElement.addEventListener('pointerdown',e=>{mouse.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);if(mode==='map'){drag={x:e.clientX,y:e.clientY,moved:0,t:performance.now(),touch:e.pointerType==='touch'};TN.user=true;}});
 function pick(){ray.setFromCamera(mouse,camera);if(mode==='map'){const h=ray.intersectObjects(markers.map(m=>m.hit))[0];return h?markers.find(m=>m.hit===h.object):null;}const h=ray.intersectObjects(screens.map(s=>s.scr))[0];return h?screens.find(s=>s.scr===h.object):null;}
-addEventListener('pointerup',e=>{const was=drag;drag=null;if(was&&was.moved>12)return;const onScene=e.target===renderer.domElement||e.target.classList.contains('mlabel');if(!onScene)return;mouse.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);hovered=e.target.classList.contains('mlabel')?markers[+e.target.dataset.k]:pick();
+addEventListener('pointerup',e=>{const was=drag;if(TN.pts.size)return;drag=null;if(was&&(was.moved>10||was.multi||(was.touch&&performance.now()-was.t>300)))return;if(was&&was.touch&&mode==='map'&&e.target===renderer.domElement&&TN.dbl(e))return;const onScene=e.target===renderer.domElement||e.target.classList.contains('mlabel');if(!onScene)return;mouse.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);hovered=e.target.classList.contains('mlabel')?markers[+e.target.dataset.k]:pick();
  if(mode==='map'&&hovered)openLoc(hovered.L);else if(mode==='studio'&&hovered&&!focused){click();focus(hovered);}});
-addEventListener('wheel',e=>{if(mode==='map')MAPCAM.dist=THREE.MathUtils.clamp(MAPCAM.dist+e.deltaY*.01,7,22);},{passive:true});
+
+// ---------- TOUCH NAV: pinch zoom, two-finger pan, double-tap, recenter ----------
+const TN={MIN:5,MAX:42,R:10,pts:new Map(),pinch:null,user:false,goal:null,last:null,HOME:{yaw:MAPCAM.yaw,pitch:MAPCAM.pitch,dist:MAPCAM.dist}};
+TN.clampT=v=>{const l=Math.hypot(v.x,v.z);if(l>TN.R){v.x*=TN.R/l;v.z*=TN.R/l;}v.y=0;return v;};
+TN.go=(dist,tx,tz,yaw,pitch)=>{TN.goal={dist,t:TN.clampT(new THREE.Vector3(tx,0,tz)),yaw,pitch};};
+TN.step=dt=>{const g=TN.goal;if(!g)return;const a=ease(.12,dt);MAPCAM.dist+=(g.dist-MAPCAM.dist)*a;MAPCAM.target.lerp(g.t,a);if(g.yaw!=null){MAPCAM.yaw+=(g.yaw-MAPCAM.yaw)*a;MAPCAM.pitch+=(g.pitch-MAPCAM.pitch)*a;}if(Math.abs(g.dist-MAPCAM.dist)<.01&&MAPCAM.target.distanceTo(g.t)<.005)TN.goal=null;};
+TN.ground=(x,y)=>{const r=new THREE.Raycaster();r.setFromCamera(new THREE.Vector2(x/innerWidth*2-1,-(y/innerHeight)*2+1),camera);const p=new THREE.Vector3();return r.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),0),p)?p:null;};
+TN.dbl=e=>{const now=performance.now(),L=TN.last;TN.last={x:e.clientX,y:e.clientY,t:now};if(!(L&&now-L.t<320&&Math.hypot(e.clientX-L.x,e.clientY-L.y)<40))return false;TN.last=null;
+ mouse.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);if(pick())return false;
+ if(MAPCAM.dist<TN.HOME.dist*.75)TN.recenter();else{const p=TN.ground(e.clientX,e.clientY)||MAPCAM.target;TN.go(Math.max(TN.MIN+1,MAPCAM.dist*.4),p.x,p.z);}return true;};
+TN.recenter=()=>{let dy=TN.HOME.yaw-MAPCAM.yaw;dy=Math.atan2(Math.sin(dy),Math.cos(dy));TN.go(TN.HOME.dist,0,0,MAPCAM.yaw+dy,TN.HOME.pitch);};
+TN.mid=()=>{const a=[...TN.pts.values()];return{x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2,s:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)};};
+addEventListener('pointerdown',e=>{if(e.pointerType!=='touch'||mode!=='map'||!(e.target===renderer.domElement||e.target.classList.contains('mlabel')))return;TN.user=true;TN.goal=null;TN.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(TN.pts.size===2){const m=TN.mid();TN.pinch={s0:Math.max(m.s,1),d0:MAPCAM.dist,x:m.x,y:m.y};if(drag)drag.multi=true;}});
+addEventListener('pointermove',e=>{if(!TN.pts.has(e.pointerId))return;TN.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});if(!TN.pinch||TN.pts.size<2)return;const m=TN.mid(),P=TN.pinch;
+ MAPCAM.dist=THREE.MathUtils.clamp(P.d0*Math.pow(P.s0/Math.max(m.s,1),1.35),TN.MIN,TN.MAX);
+ const k=2*MAPCAM.dist*Math.tan(THREE.MathUtils.degToRad(camera.fov)/2)/innerHeight,dx=(m.x-P.x)*k,dy=(m.y-P.y)*k;P.x=m.x;P.y=m.y;
+ const right=new THREE.Vector3(Math.cos(MAPCAM.yaw),0,-Math.sin(MAPCAM.yaw)),fwd=new THREE.Vector3(-Math.sin(MAPCAM.yaw),0,-Math.cos(MAPCAM.yaw));
+ const t=MAPCAM.target.clone().addScaledVector(right,-dx).addScaledVector(fwd,dy/Math.max(Math.sin(MAPCAM.pitch),.5));MAPCAM.target.copy(TN.clampT(t));curLook.copy(MAPCAM.target);});
+const tnEnd=e=>{if(!TN.pts.delete(e.pointerId))return;if(TN.pts.size<2)TN.pinch=null;if(TN.pts.size===1&&drag){const a=[...TN.pts.values()][0];drag.x=a.x;drag.y=a.y;}};
+addEventListener('pointerup',tnEnd,true);addEventListener('pointercancel',tnEnd,true);
+document.getElementById('recenter').onclick=e=>{e.stopPropagation();click(900);TN.recenter();};
+window.__TN=TN;window.__MC=MAPCAM;window.__mode=()=>mode;
+addEventListener('wheel',e=>{if(mode==='map')MAPCAM.dist=THREE.MathUtils.clamp(MAPCAM.dist+e.deltaY*.01,TN.MIN,TN.MAX);},{passive:true});
 // ---------- SCRUBBER (bottom bar) for the zoomed video ----------
 function activeVid(){if(apOpen())return null;return focused&&focused.video&&!focused.dead&&focused.video.readyState>0?focused.video:null;}
 const bar=document.getElementById('bar'),tip=document.createElement('div');tip.id='tip';tip.className='vt';bar.appendChild(tip);
@@ -468,7 +510,7 @@ function loadClip(){if(apItem.proj){const s=screens[apIdx],p=s.p,ok=!!s.video&&!
   document.getElementById('apinfo').textContent=`${p.title} · ${p.type}`;document.getElementById('apwatch').href=p.ig||'#';ap.querySelector('.apnav').style.visibility='';document.getElementById('apn').textContent=`${apIdx+1}/${screens.length}`;return;}
  ap.classList.remove('proj','novid');
  const it=apItem,c=it.clips[apIdx];ap.querySelector('.apbg').style.backgroundImage=`url("${AR}${c}.jpg")`;apv.poster=AR+c+'.jpg';apv.src=AR+c+'.mp4';apv.loop=true;apv.muted=!A.on;apv.play().catch(()=>{apv.muted=true;apv.play().catch(()=>{});});
- document.getElementById('apinfo').textContent=`${it.client?it.client+" · "+it.type:(it.title||it.account)} · ${it.year}`;const multi=it.clips.length>1;ap.querySelector('.apnav').style.visibility=multi?'':'hidden';document.getElementById('apn').textContent=`${apIdx+1}/${it.clips.length}`;}
+ document.getElementById('apinfo').textContent=`${it.client?it.client+" · "+it.type:(it.title||it.account)} · ${it.year}`;const multi=it.clips.length>1;ap.querySelector('.apnav').style.visibility=multi?'':'hidden';ap.classList.toggle('one',!multi);document.getElementById('apn').textContent=`${apIdx+1}/${it.clips.length}`;}
 function step(d){if(!apItem)return;const L=apItem.proj?screens.length:apItem.clips.length;if(L<2)return;apIdx=(apIdx+d+L)%L;if(apItem.proj)sel=apIdx;click(2200);glitchT=Math.max(glitchT,.35);loadClip();}
 function closeItem(){document.body.classList.remove('aplay');apv.pause();apv.removeAttribute('src');apv.load();ap.classList.remove('on');apItem=null;click();if(phone()&&mode==='studio')phoneFrame();}
 apv.addEventListener('loadedmetadata',()=>{const w=apv.videoWidth,h=apv.videoHeight;ap.classList.toggle('vert',h>w*1.05);ap.classList.toggle('land',w>h*1.05);});
@@ -527,9 +569,9 @@ function loop(){const t=clock.getElapsedTime(),dt=Math.min(.1,t-lastT);lastT=t;i
  if(f%30===0){const d=new Date();clk.textContent=d.toTimeString().slice(0,5)+' Local';}
  ray.setFromCamera(mouse,camera);
  if(mode==='map'){const introB=innerWidth<=640?document.getElementById('intro').getBoundingClientRect().bottom+14:0;
-  MAPCAM.yaw+=drag||window.__spin===0||RED?0:.048*dt;const d=MAPCAM.dist;camera.position.lerp(v3.set(Math.sin(MAPCAM.yaw)*Math.cos(MAPCAM.pitch)*d,Math.sin(MAPCAM.pitch)*d,Math.cos(MAPCAM.yaw)*Math.cos(MAPCAM.pitch)*d),ease(RED?.3:.08,dt));
+  MAPCAM.yaw+=drag||TN.user||window.__spin===0||RED?0:.048*dt;TN.step(dt);const d=MAPCAM.dist,T=MAPCAM.target;camera.position.lerp(v3.set(T.x+Math.sin(MAPCAM.yaw)*Math.cos(MAPCAM.pitch)*d,T.y+Math.sin(MAPCAM.pitch)*d,T.z+Math.cos(MAPCAM.yaw)*Math.cos(MAPCAM.pitch)*d),ease(RED?.3:.08,dt));
   curLook.lerp(MAPCAM.target,ease(RED?.3:.1,dt));camera.lookAt(curLook);
-  const hit=drag&&drag.moved>12?null:ray.intersectObjects(markerHits,false)[0];const h=hit?markers[markerHits.indexOf(hit.object)]:null;
+  const hit=drag&&drag.moved>10?null:ray.intersectObjects(markerHits,false)[0];const h=hit?markers[markerHits.indexOf(hit.object)]:null;
   if(h!==hovered){hovered=h;document.body.style.cursor=h?'pointer':'';label.style.opacity=h?1:0;if(h){click(2600);label.innerHTML=`<b>${h.L.name}</b>${h.L.sub} · ${h.L.kind==='project'?'Load tape':h.L.kind==='studio'?'Enter':'Open'}`;}}
   document.body.style.cursor=hovered?'pointer':'';
   markers.forEach((m,k)=>{m.hover+=((m===hovered)-m.hover)*ease(.15,dt);const pulse=RED?1:1+Math.sin(t*2+k)*.08;m.sp.scale.setScalar((m.L.kind==='studio'?1.6:1.1)*pulse*(1+m.hover*.5));m.beam.material.opacity=.3+m.hover*.4;m.lt.intensity=4+m.hover*6;
