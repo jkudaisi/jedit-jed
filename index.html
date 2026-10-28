@@ -241,25 +241,9 @@ const PROJECTS=[
 ];
 // ARCHIVE: extra edits. Files live in media/archive/<clip>.mp4 + <clip>.jpg (poster).
 // Add a title:'...' whenever you like (shown instead of the account). Multi-clip posts get prev/next.
-const ARCHIVE=[
- {account:"@jedit.jed",year:2026,title:'',client:"Rowan University",type:"BattleShip 2026",clips:["18-rowanbattleship"]},
- {account:"@omonaijafest",year:2025,title:'',client:"Omo Naija Fest",type:"Festival recap",clips:["06-omonaijafest"]},
- {account:"@jedit.jed",year:2026,title:'',client:"Afriskii Fest",type:"Recap",clips:["10-jeditjed"]},
- {account:"@jedit.jed",year:2026,title:'',client:"Shutupxdance",type:"The Rodeo",clips:["08-jeditjed"]},
- {account:"@jedit.jed",year:2026,title:'',client:"Afroheat Members Circle",type:"3D product ad",clips:["11-jeditjed"]},
- {account:"@bid_rowan",year:2025,title:'',client:"Rowan Fashion Show",type:"Fashion show recap",clips:["03-bid_rowan"]},
- {account:"@vibeafriquephl",year:2026,title:'',client:"Vibe Afrique PHL",type:"Party recap",clips:["17-vibeafriquephl"]},
- {account:"@afriskiifest",year:2026,title:'',client:"Afriskii Fest",type:"Ski & snowboard event",clips:["01-afriskiifest"]},
- {account:"@omonaijafest",year:2025,title:'',client:"Omo Naija Festival",type:"2025 recap",clips:["14-omonaijafest"]},
- {account:"@omonaijafest",year:2026,title:'',client:"Omo Naija Festival",type:"2026 promo",clips:["15-omonaijafest"]},
- {account:"@jedit.jed",year:2026,title:'',client:"GenOfYahweh",type:"Music / lifestyle edit",clips:["12-jeditjed"]},
- {account:"@jedit.jed",year:2026,title:'',client:"Rowan IM Basketball",type:"Game highlight",clips:["09-jeditjed"]},
- {account:"@jedit.jed",year:2026,title:'',client:"Shots from Acana",type:"Event recap",clips:["13-jeditjed-1", "13-jeditjed-2", "13-jeditjed-3", "13-jeditjed-4", "13-jeditjed-5", "13-jeditjed-6", "13-jeditjed-7", "13-jeditjed-8", "13-jeditjed-9"]},
- {account:"@jedit.jed",year:2025,title:'',client:"Hair2There",type:"Hair salon promo",clips:["04-jeditjed"]},
- {account:"@jedit.jed",year:2025,title:'',client:"Eatwell Philly",type:"Restaurant promo",clips:["05-jeditjed"]},
- {account:"@rujesusclub",year:2025,title:'',client:"RU Jesus Club",type:"Ministry event recap",clips:["16-rujesusclub"]},
- {account:"@jedit.jed",year:2026,title:'',client:"Sport Wrestling",type:"Match highlight",clips:["07-jeditjed"]},
-];
+let ARCHIVE=[],ARCH_ERR=false;
+// ARCHIVE cards live in projects.json (edit that file, or use "Add Project.bat").
+try{const r=await fetch('projects.json',{cache:'no-cache'});if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();ARCHIVE=Array.isArray(j)?j:(j.archive||[]);}catch(e){ARCH_ERR=true;console.error('Could not load projects.json',e);}
 // ===========================================
 const Q=new URLSearchParams(location.search);const NOVIDEO=Q.has('novideo');const FILEMODE=location.protocol==='file:'||Q.has('domvideo');
 if(FILEMODE)console.info('file:// mode: videos are shown as HTML <video> layers on the monitors. For the full effect run start-site.bat.');
@@ -493,6 +477,7 @@ ARCHIVE.forEach((it,k)=>{const d=document.createElement('div');d.className='tape
  let hvT=0;d.onmouseenter=()=>{click(2600);if(pv||TOUCH)return;clearTimeout(hvT);hvT=setTimeout(()=>{if(pv)return;pv=document.createElement('video');pv.muted=true;pv.loop=true;pv.playsInline=true;pv.preload='auto';pv.src=AR+it.clips[0]+'-prev.mp4';pv.style.opacity=0;pv.onplaying=()=>{pv&&(pv.style.opacity=1)};pv.onerror=()=>{if(!pv)return;if(pv.src.endsWith('-prev.mp4')){pv.src=AR+it.clips[0]+'.mp4';pv.play().catch(()=>{});return;}pv.remove();pv=null;};scr.insertBefore(pv,scr.querySelector('.n'));pv.play().catch(()=>{});},120);};
  d.onmouseleave=()=>{clearTimeout(hvT);if(pv){pv.pause();pv.removeAttribute('src');pv.load();pv.remove();pv=null;}};
  d.onclick=()=>{if(TOUCH&&!d.classList.contains('lbl')){document.querySelectorAll('.tape.lbl').forEach(t=>t.classList.remove('lbl'));d.classList.add('lbl');click(2600);return;}d.classList.remove('lbl');d.onmouseleave();openItem(k,0);};agrid.appendChild(d);});
+if(ARCH_ERR||!ARCHIVE.length)agrid.innerHTML='<p class="vt" style="grid-column:1/-1;padding:40px 10px;text-align:center;color:#8892a6;letter-spacing:2px">'+(ARCH_ERR?'TRACKING ERROR · THE TAPE LIST DID NOT LOAD. REFRESH TO TRY AGAIN.':'NO TAPES YET.')+'</p>';
 function openArchive(){document.body.classList.add('arch');click(900);glitchT=Math.max(glitchT,.6);document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));arch.classList.add('on');}
 function closeArchive(){document.body.classList.remove('arch');arch.classList.remove('on');}
 function openItem(k,i){apItem=ARCHIVE[k];apIdx=i;glitchT=Math.max(glitchT,.6);whoosh(.8);loadClip();ap.classList.add('on');document.body.classList.add('aplay');}

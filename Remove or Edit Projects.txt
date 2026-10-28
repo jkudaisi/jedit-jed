@@ -1,0 +1,36 @@
+JEDIT.JED - HOW TO EDIT OR REMOVE A PROJECT CARD
+================================================
+
+All archive cards are listed in the file  projects.json  (in this folder).
+The FIRST card in the list shows first on the site and is numbered A-01.
+
+EDIT A CARD
+1. Right-click projects.json > Open with > Notepad.
+2. Find the card (Ctrl+F, type its name). A card looks like:
+   {"account": "@jedit.jed", "year": 2026, "title": "", "client": "Rowan University", "type": "BattleShip 2026", "clips": ["18-rowanbattleship"]},
+   - "client" = big name on the card
+   - "type"   = small subtitle
+   - "year"   = year on the label
+   Only change the text between the quotes. Keep the quotes, colons and commas.
+3. Save (Ctrl+S).
+
+REMOVE A CARD
+1. Open projects.json in Notepad.
+2. Delete the whole line of that card, from { to }, including its comma.
+   The LAST card in the list must NOT end with a comma.
+3. Save. (The video files stay in media\archive, which is fine.)
+
+REORDER
+Cut a card's line and paste it higher or lower in the list. Mind the commas.
+
+PUBLISH YOUR EDITS
+Make sure "_ADD PROJECT HERE" has no videos in it, then double-click
+"Add Project.bat". It checks the file for typos and uploads it.
+If it says the file has a typo, fix the comma/quote it points to and run again.
+
+ADD A NEW PROJECT
+Drop the video(s) into "_ADD PROJECT HERE" and double-click "Add Project.bat".
+Videos over about 6 minutes are compressed harder so they fit GitHub's 100 MB limit.
+
+The 5 big studio monitors (ACANA, Teni, Culture Clash, OmoNaija, AfroPlus) are
+not in projects.json - ask Grok Bot to change those.
