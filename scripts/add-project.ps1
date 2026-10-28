@@ -1,7 +1,7 @@
 # Jedit.Jed - Add Project. Double-click "Add Project.bat" to run.
 # Drop video(s) into the "_ADD PROJECT HERE" folder first.
 param([switch]$DryRun)
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Continue'   # native tools (git) write progress to stderr; we check exit codes instead
 $Repo   = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $Drop   = Join-Path $Repo '_ADD PROJECT HERE'
 $Done   = Join-Path $Drop 'done'
@@ -196,8 +196,8 @@ if ($DryRun) {
 
 # ---- publish ----
 Say ''; Say '  Uploading to GitHub...' 'Cyan'
-git add -- projects.json media | Out-Null
-git commit -m $commitMsg | Out-Host
+git add -- projects.json media 2>&1 | Out-Null
+git commit -m $commitMsg 2>&1 | Out-Host
 if ($LASTEXITCODE -ne 0) { Fail 'git commit failed.' }
 git push origin main 2>&1 | Out-Host
 if ($LASTEXITCODE -ne 0) { Fail 'Upload (git push) failed. Check your internet, then just run Add Project.bat again (with no video) to retry the upload.' }
@@ -208,7 +208,7 @@ $ok = $false
 for ($k = 0; $k -lt 40; $k++) {
   Start-Sleep 10
   try {
-    $r = (Invoke-WebRequest ($Live + 'projects.json?t=' + [guid]::NewGuid()) -UseBasicParsing -Headers @{ 'Cache-Control' = 'no-cache' }).Content
+    $r = (Invoke-WebRequest -ErrorAction Stop ($Live + 'projects.json?t=' + [guid]::NewGuid()) -UseBasicParsing -Headers @{ 'Cache-Control' = 'no-cache' }).Content
     if ($r -is [byte[]]) { $r = $Utf8.GetString($r) }
     if (($want -and $r.Contains($want)) -or (!$want -and ($r -replace '\s', '') -eq $local)) { $ok = $true; break }
   } catch { }
