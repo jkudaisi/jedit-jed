@@ -105,7 +105,14 @@ $commitMsg = $null; $newClips = @()
 if ($vids.Count -eq 0) {
   Say '  No videos in "_ADD PROJECT HERE".' 'Yellow'
   $chg = git status --porcelain -- projects.json media
-  if (!$chg) { Say '  And no edits to projects.json either. Nothing to do.'; Pause-End; exit 0 }
+  $ahead = git log --oneline origin/main..HEAD 2>$null
+  if (!$chg -and $ahead) {
+    Say '  You have a saved change that was never uploaded. Uploading it now...' 'Yellow'
+    $commitMsg = '__pushonly__'
+  } elseif (!$chg) { Say '  And no edits to projects.json either. Nothing to do.'; Pause-End; exit 0 }
+}
+if ($commitMsg -eq '__pushonly__') { }
+elseif ($vids.Count -eq 0) {
   Say '  You have edits to projects.json (or media). Checking the file...' 'Gray'
   try { $null = (Get-Content $Json -Raw -Encoding UTF8) | ConvertFrom-Json } catch { Fail "projects.json has a typo (broken JSON): $($_.Exception.Message). Fix it in Notepad and run again." }
   if ((Ask 'Publish these edits to the live site? (y/n)' 'y') -notmatch '^[yY]') { Say '  OK, nothing published.'; Pause-End; exit 0 }
@@ -197,20 +204,22 @@ if ($DryRun) {
 # ---- publish ----
 Say ''; Say '  Uploading to GitHub...' 'Cyan'
 git add -- projects.json media 2>&1 | Out-Null
-git commit -m $commitMsg 2>&1 | Out-Host
-if ($LASTEXITCODE -ne 0) { Fail 'git commit failed.' }
-git push origin main 2>&1 | Out-Host
+if ($commitMsg -ne '__pushonly__') {
+  git commit -q -m $commitMsg 2>&1 | ForEach-Object { "  $_" } | Out-Host
+  if ($LASTEXITCODE -ne 0) { Fail 'git commit failed.' }
+}
+git push -q origin main 2>&1 | ForEach-Object { "  $_" } | Out-Host
 if ($LASTEXITCODE -ne 0) { Fail 'Upload (git push) failed. Check your internet, then just run Add Project.bat again (with no video) to retry the upload.' }
 Say '  Uploaded. Waiting for the live site to update (usually 1-2 minutes)...' 'Cyan'
 $want = if ($script:newClips.Count) { $script:newClips[0] } else { $null }
-$local = [IO.File]::ReadAllText($Json, $Utf8) -replace '\s', ''
+$local = ([IO.File]::ReadAllText($Json, $Utf8) -replace "`r", '').Trim()
 $ok = $false
 for ($k = 0; $k -lt 40; $k++) {
   Start-Sleep 10
   try {
     $r = (Invoke-WebRequest -ErrorAction Stop ($Live + 'projects.json?t=' + [guid]::NewGuid()) -UseBasicParsing -Headers @{ 'Cache-Control' = 'no-cache' }).Content
     if ($r -is [byte[]]) { $r = $Utf8.GetString($r) }
-    if (($want -and $r.Contains($want)) -or (!$want -and ($r -replace '\s', '') -eq $local)) { $ok = $true; break }
+    if (($want -and $r.Contains($want)) -or (!$want -and ($r -replace "`r", '').Trim() -eq $local)) { $ok = $true; break }
   } catch { }
   Write-Host '.' -NoNewline
 }
