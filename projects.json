@@ -1,6 +1,6 @@
 {
   "_readme": "Archive cards, newest first. The first card becomes A-01. Clip files live in media/archive/<clip>.mp4, <clip>-prev.mp4 and <clip>.jpg. See \"Remove or Edit Projects.txt\".",
-  "archive": [
+  "archive":  [
     {"account": "@jedit.jed", "year": 2026, "title": "", "client": "Rowan University", "type": "BattleShip 2026", "clips": ["18-rowanbattleship"]},
     {"account": "@omonaijafest", "year": 2025, "title": "", "client": "Omo Naija Fest", "type": "Festival recap", "clips": ["06-omonaijafest"]},
     {"account": "@jedit.jed", "year": 2026, "title": "", "client": "Afriskii Fest", "type": "Recap", "clips": ["10-jeditjed"]},
