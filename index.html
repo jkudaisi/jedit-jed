@@ -533,7 +533,7 @@ document.getElementById('g-mute').onclick=()=>{audioInit();gate.classList.add('o
 if(Q.get('gate')==='0')gate.classList.add('off');
 addEventListener('resize',()=>{cssR.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);vhs.uniforms.res.value.set(innerWidth,innerHeight);});
 // test hooks
-window.__studio=i=>{unfocus(true);setMode('studio');if(i!=null){focus(screens[i]);camera.position.copy(camTarget.pos);curLook.copy(camTarget.look);}else{camera.position.copy(HOME.pos);curLook.copy(HOME.look);}};
+window.__allv=()=>[...new Set([...document.querySelectorAll('video'),...screens.map(o=>o.video).filter(Boolean)])];window.__actx=()=>A.ctx?A.ctx.state:'none';window.__studio=i=>{unfocus(true);setMode('studio');if(i!=null){focus(screens[i]);camera.position.copy(camTarget.pos);curLook.copy(camTarget.look);}else{camera.position.copy(HOME.pos);curLook.copy(HOME.look);}};
 window.__glitch=v=>{glitchT=v;glitchV=v;};window.__mapcam=()=>MAPCAM;window.__fps=ms=>new Promise(r=>{let n=0;const t0=performance.now();const f=()=>{n++;if(performance.now()-t0<ms)requestAnimationFrame(f);else r(+(n*1000/(performance.now()-t0)).toFixed(1));};requestAnimationFrame(f);});window.__sel=()=>sel;window.__useVid=i=>screens[i].useVideo;window.__vstate=()=>screens.map(s=>s.video?{i:s.i,dom:!!s.dom,t:+s.video.currentTime.toFixed(2),paused:s.video.paused,muted:s.video.muted,rs:s.video.readyState}:{i:s.i,none:1});window.__videos=()=>screens.map(s=>s.video).filter(Boolean);window.__mode=()=>mode+(focused?':focus'+focused.i:'');Object.defineProperty(window,'__gv',{get:()=>glitchV});
 window.__screenXY=i=>{const v=screens[i].scr.getWorldPosition(new THREE.Vector3()).project(camera);return{x:(v.x*.5+.5)*innerWidth,y:(-v.y*.5+.5)*innerHeight};};window.__beaconXY=k=>{const m=markers.find(m=>m.L.kind===k);const v=m.hit.getWorldPosition(new THREE.Vector3()).project(camera);return{x:(v.x*.5+.5)*innerWidth,y:(-v.y*.5+.5)*innerHeight,name:m.L.name};};window.__freeze=false;
 
@@ -544,7 +544,11 @@ const LITE=matchMedia('(pointer:coarse)').matches||innerWidth<=640;
 if(LITE){renderer.setPixelRatio(1);composer.passes.forEach(ps=>{if(ps instanceof UnrealBloomPass)ps.enabled=false;});}
 const ease=(a,dt)=>1-Math.pow(1-a,dt*60); // frame-rate independent lerp factor
 const markerHits=markers.map(m=>m.hit),screenHits=screens.map(s=>s.scr);let lastTc='',lastGtc='',lastTick='',lastLbl='';
-let rafId=0;document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(rafId);rafId=0;document.querySelectorAll('video').forEach(v=>{if(!v.paused){v.dataset.rs='1';v.pause();}});}else{document.querySelectorAll('video[data-rs]').forEach(v=>{delete v.dataset.rs;v.play().catch(()=>{});});clock.getDelta();lastT=clock.getElapsedTime();if(!rafId)rafId=requestAnimationFrame(loop);}});
+let rafId=0,away=false;const apvEl=document.querySelector('#aplayer .apv'),allV=()=>[...new Set([...document.querySelectorAll('video'),...screens.map(o=>o.video).filter(Boolean)])];
+function leave(){if(away)return;away=true;cancelAnimationFrame(rafId);rafId=0;allV().forEach(v=>{if(!v.paused){if(v!==apvEl)v.dataset.rs='1';v.pause();}});if(A.ctx&&A.ctx.state==='running')A.ctx.suspend().catch(()=>{});}
+function comeBack(){if(document.hidden||!away)return;away=false;allV().filter(v=>v.dataset.rs).forEach(v=>{delete v.dataset.rs;v.play().catch(()=>{});});if(A.ctx&&A.on)A.ctx.resume().catch(()=>{});clock.getDelta();lastT=clock.getElapsedTime();if(!rafId)rafId=requestAnimationFrame(loop);}
+document.addEventListener('visibilitychange',()=>document.hidden?leave():comeBack());addEventListener('pagehide',leave);document.addEventListener('freeze',leave);addEventListener('pageshow',e=>{if(e.persisted){away=true;comeBack();}});
+['pointerdown','keydown','touchend'].forEach(ev=>addEventListener(ev,()=>{if(A.ctx&&A.on&&A.ctx.state!=='running'&&!document.hidden)A.ctx.resume().catch(()=>{});},true));
 let lastT=0,lastCss='';const apOpen=()=>document.getElementById('aplayer').classList.contains('on');
 function loop(){const t=clock.getElapsedTime(),dt=Math.min(.1,t-lastT);lastT=t;if(RED){glitchT=0;}
  if(!window.__freeze){glitchT=Math.max(0,glitchT-dt/.33);glitchV+=(glitchT-glitchV)*ease(.5,dt);}
