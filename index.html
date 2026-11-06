@@ -215,7 +215,7 @@ body.m-studio #hint,body.m-studio #intro{display:none}
   <a class="logo" href="#" id="nav-logo" aria-label="Jedit.Jed"><svg viewBox="0 0 573 536"><use href="#jlogo" fill="#fff"/></svg></a>
   <div class="grp"><a href="#" id="nav-studio">Studio</a><a href="#" id="nav-archive">Archive</a><a href="#" data-p="about">About</a><a href="#" data-p="contact">Contact</a></div>
  </div>
- <div id="intro"><h1>Cuts that move.</h1><p>Video editor · Sound design · Cinematography.<br><span class="l2">Every light on the map is a tape. Pick one.</span></p><button id="feat" type="button" aria-label="Play featured showreel: Afro+ Fest Summer 2026 recap"><span class="fv" style="background-image:url(media/archive/19-afroplusfest.jpg)"><canvas width="352" height="198" aria-hidden="true"></canvas><span class="fp vt">▶ PLAY</span></span><span><span class="fk vt">FEATURED</span><span class="ft">Afro+ Fest Summer 2026 recap</span></span></button></div>
+ <div id="intro"><h1>Cuts that move.</h1><p>Video editor · Sound design · Cinematography.<br><span class="l2">Every light on the map is a tape. Pick one.</span></p><button id="feat" type="button" aria-label="Play Summer Through My Lens: artists I worked with in summer 2026"><span class="fv" style="background-image:url(media/archive/19-afroplusfest.jpg)"><canvas width="352" height="198" aria-hidden="true"></canvas><span class="fp vt">▶ PLAY</span></span><span><span class="fk vt">FEATURED</span><span class="ft">Summer Through My Lens</span></span></button></div>
  <div id="hint"><span class="hd">Drag to look around</span><span class="hm">Drag · pinch · 2-finger move</span><br>Tap a light to load the tape<span class="d"> · ← → ↵ in studio</span></div>
  <div id="bar"><div id="ticks" style="width:0"></div><div class="rest"></div></div>
  <div class="row bot">
@@ -594,6 +594,6 @@ cvs.addEventListener('webglcontextrestored',()=>{clearTimeout(lostT);fix(studio)
 fv.onerror=()=>{fc.style.opacity=0;};
 if(!RED&&!NOVIDEO)setTimeout(fplay,1500);fb.onmouseenter=()=>{if(!TOUCH&&!NOVIDEO)fplay();};fb.onmouseleave=()=>{if(RED)fstop();};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)fstop();else if(!RED&&mode==='map')fplay();});
-fb.onclick=e=>{e.preventDefault();e.stopPropagation();fstop();const k=ARCHIVE.findIndex(a=>a.clips&&a.clips[0]===FC);if(k>=0)openItem(k,0);else{ARCHIVE.unshift({account:'@jedit.jed',year:2026,title:'',client:'Afro+ Fest',type:'Summer 2026 recap',clips:[FC]});openItem(0,0);}apv.muted=false;apv.play().catch(()=>{apv.muted=true;apv.play().catch(()=>{});});};
+fb.onclick=e=>{e.preventDefault();e.stopPropagation();fstop();const k=ARCHIVE.findIndex(a=>a.clips&&a.clips[0]===FC);if(k>=0)openItem(k,0);else{ARCHIVE.unshift({account:'@jedit.jed',year:2026,title:'Summer Through My Lens',client:'Summer Through My Lens',type:'A collage of the artists I worked with in summer 2026',clips:[FC]});openItem(0,0);}apv.muted=false;apv.play().catch(()=>{apv.muted=true;apv.play().catch(()=>{});});};
 ['pointerdown','touchstart','wheel'].forEach(t=>fb.addEventListener(t,e=>e.stopPropagation(),{passive:true}));}
 </script></body></html>
